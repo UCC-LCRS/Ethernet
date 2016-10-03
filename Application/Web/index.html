@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Ethernet</title>
+    <link rel="stylesheet" href="pure.css">
+    <script src="nanoajax.min.js"></script>
+    <script>
+        (function () {
+            setInterval(function () {
+                nanoajax.ajax({url: '/tasks.html'}, function (code, responseText) {
+                    document.getElementById('tareas').innerHTML = responseText;
+                });
+                nanoajax.ajax({url: '/ADC.html'}, function (code, responseText) {
+                    if (code == 200)
+                        document.getElementById('ADC').value = responseText;
+                });
+                nanoajax.ajax({url: '/leds.html'}, function (code, responseText) {
+                    var leds = JSON.parse(responseText);
+                    for (var i = 1; i <= 4; i++) {
+                        var l = document.getElementById('l' + i);
+                        l.className = 'pure-button';
+                        if (leds.leds[i] == 1) {
+                            l.className += ' pure-button-active';
+                        }
+                    }
+                });
+
+            }, 1000);
+        })();
+
+        function turnLed(obj) {
+            var valor = 0;
+            if (obj.className.indexOf('pure-button-active') != -1)
+                valor = 1;
+            nanoajax.ajax({url: '/leds.html&' + obj.id + '=' + valor}, function (code, responseText) {
+                var leds = JSON.parse(responseText);
+                for (var i = 1; i <= 4; i++) {
+                    var l = document.getElementById('l' + i);
+                    l.className = 'pure-button';
+                    if (leds.leds[i] == 1) {
+                        l.className += ' pure-button-active';
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div style="background: #5a5758;padding: 10px;margin-bottom: 10px; text-align: center">
+    <img src="img/logoFI.png" alt="">
+    <h1 style="color: #7fb2ff">Demo Ethernet</h1>
+</div>
+<div class="pure-g">
+    <div class="pure-u-1-2" style="text-align: right;">
+        <div style="padding: 8px;">Estado de los Leds</div>
+    </div>
+    <div class="pure-u-1-2">
+        <button id="l1" class="pure-button" onclick="turnLed(this)">Led 1</button>
+        <button id="l2" class="pure-button" onclick="turnLed(this)">Led 2</button>
+        <button id="l3" class="pure-button" onclick="turnLed(this)">Led 3</button>
+        <button id="l4" class="pure-button" onclick="turnLed(this)">Led 4</button>
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-1-2" style="text-align: right;">
+        <div style="padding: 8px;">Estado del potenciometro</div>
+    </div>
+    <div class="pure-u-1-2">
+        <div style="padding-top: 8px">
+            <progress id="ADC" max="100" value="80" style="width: 300px"></progress>
+        </div>
+    </div>
+    <div class="pure-u-1" style="text-align: center">
+        <div style="margin:auto;" id="tareas"></div>
+    </div>
+</div>
+</body>
+</html>
