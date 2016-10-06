@@ -20,7 +20,7 @@
                     for (var i = 1; i <= 4; i++) {
                         var l = document.getElementById('l' + i);
                         l.className = 'pure-button';
-                        if (leds.leds[i] == 1) {
+                        if (leds.leds[i-1] == 1) {
                             l.className += ' pure-button-active';
                         }
                     }
@@ -31,7 +31,7 @@
 
         function turnLed(obj) {
             var valor = 0;
-            if (obj.className.indexOf('pure-button-active') != -1)
+            if (obj.className.indexOf('pure-button-active') == -1)
                 valor = 1;
             nanoajax.ajax({url: '/leds.html&' + obj.id + '=' + valor}, function (code, responseText) {
                 var leds = JSON.parse(responseText);

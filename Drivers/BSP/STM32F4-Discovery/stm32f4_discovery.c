@@ -92,11 +92,22 @@
 GPIO_TypeDef* GPIO_PORT[LEDn] = {LED4_GPIO_PORT, 
                                  LED3_GPIO_PORT, 
                                  LED5_GPIO_PORT,
-                                 LED6_GPIO_PORT};
+                                 LED6_GPIO_PORT,
+								 GPIOD,
+								 GPIOD,
+								 GPIOD,
+								 GPIOD};
+
+
 const uint16_t GPIO_PIN[LEDn] = {LED4_PIN, 
                                  LED3_PIN, 
                                  LED5_PIN,
-                                 LED6_PIN};
+                                 LED6_PIN,
+								 GPIO_PIN_0,
+								 GPIO_PIN_1,
+								 GPIO_PIN_2,
+								 GPIO_PIN_3};
+
 
 GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {KEY_BUTTON_GPIO_PORT}; 
 const uint16_t BUTTON_PIN[BUTTONn] = {KEY_BUTTON_PIN}; 
@@ -186,6 +197,25 @@ void BSP_LED_Init(Led_TypeDef Led)
   
   HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_RESET); 
 }
+void BSP_BARRA_Init()
+{
+  GPIO_InitTypeDef  GPIO_InitStruct;
+
+  /* Enable the GPIO_LED Clock */
+  __GPIOD_CLK_ENABLE();
+
+  /* Configure the GPIO_LED pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  //HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_RESET);
+}
+
+
 
 /**
   * @brief  Turns selected LED On.

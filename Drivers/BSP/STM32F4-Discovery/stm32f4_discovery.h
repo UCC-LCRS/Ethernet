@@ -67,7 +67,11 @@ typedef enum
   LED4 = 0,
   LED3 = 1,
   LED5 = 2,
-  LED6 = 3
+  LED6 = 3,
+  BARRA1 = 4,
+  BARRA2 = 5,
+  BARRA3 = 6,
+  BARRA4 = 7
 } Led_TypeDef;
 
 typedef enum 
@@ -268,6 +272,7 @@ typedef enum
   */
 uint32_t BSP_GetVersion(void);
 void     BSP_LED_Init(Led_TypeDef Led);
+void     BSP_BARRA_Init();
 void     BSP_LED_On(Led_TypeDef Led);
 void     BSP_LED_Off(Led_TypeDef Led);
 void     BSP_LED_Toggle(Led_TypeDef Led);

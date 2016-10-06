@@ -52,6 +52,7 @@
 #include "string.h"
 #include "httpserver-netconn.h"
 #include "cmsis_os.h"
+#include "stm32f4_discovery.h"
 
 #include <stdio.h>
 
@@ -201,6 +202,8 @@ void ReturnLeds(struct netconn *conn, char* buf) {
 
 	char *led1, *led2, *led3, *led4;
 
+	// GET /leds.html?l1=1 HTTP/1.0
+	// GET /leds.html?l2=0 HTTP/1.0
 
 	led1 = strstr(buf,"l1=");
 	led2 = strstr(buf,"l2=");
@@ -209,11 +212,36 @@ void ReturnLeds(struct netconn *conn, char* buf) {
 
 	if(led1 != NULL){
 		//tengo el led1
+		if(led1[3] == '0')
+			BSP_LED_Off(BARRA1);
+		else
+			BSP_LED_On(BARRA1);
+	}
+	if(led2 != NULL){
+		//tengo el led1
+		if(led2[3] == '0')
+			BSP_LED_Off(BARRA2);
+		else
+			BSP_LED_On(BARRA2);
+	}
+	if(led3 != NULL){
+		//tengo el led1
+		if(led3[3] == '0')
+			BSP_LED_Off(BARRA3);
+		else
+			BSP_LED_On(BARRA3);
+	}
+	if(led4 != NULL){
+		//tengo el led1
+		if(led4[3] == '0')
+			BSP_LED_Off(BARRA4);
+		else
+			BSP_LED_On(BARRA4);
 	}
 
 
 
-	strcat((char *) PAGE_BODY,	"́HTTP/1.0 200 OK\nContent-Type: application/json\n\n"
+	strcat((char *) PAGE_BODY,	"HTTP/1.0 200 OK\nContent-Type: application/json\n\n"
 			"{\"leds\": [0,0,1,1]}\n");
 
 	netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);

@@ -245,7 +245,12 @@ static void BSP_Config(void)
   BSP_LED_Init(LED5);
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
-  
+
+  BSP_BARRA_Init();
+
+
+
+
 #ifdef USE_LCD
   
   /* Initialize the LCD */
