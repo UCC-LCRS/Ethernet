@@ -102,7 +102,7 @@ typedef enum
 /** @defgroup STM32F4_DISCOVERY_LOW_LEVEL_LED STM32F4 DISCOVERY LOW LEVEL LED
   * @{
   */
-#define LEDn                             4
+#define LEDn                             8
 
 #define LED4_PIN                         GPIO_PIN_12
 #define LED4_GPIO_PORT                   GPIOD
@@ -122,18 +122,51 @@ typedef enum
 #define LED6_PIN                         GPIO_PIN_15
 #define LED6_GPIO_PORT                   GPIOD
 #define LED6_GPIO_CLK_ENABLE()           __GPIOD_CLK_ENABLE()  
-#define LED6_GPIO_CLK_DISABLE()          __GPIOD_CLK_DISABLE()  
+#define LED6_GPIO_CLK_DISABLE()          __GPIOD_CLK_DISABLE()
+
+
+#define BARRA1_PIN                         GPIO_PIN_0
+#define BARRA1_GPIO_PORT                   GPIOD
+#define BARRA1_GPIO_CLK_ENABLE()           __GPIOD_CLK_ENABLE()
+#define BARRA1_GPIO_CLK_DISABLE()          __GPIOD_CLK_DISABLE()
+
+
+#define BARRA2_PIN                         GPIO_PIN_1
+#define BARRA2_GPIO_PORT                   GPIOD
+#define BARRA2_GPIO_CLK_ENABLE()           __GPIOD_CLK_ENABLE()
+#define BARRA2_GPIO_CLK_DISABLE()          __GPIOD_CLK_DISABLE()
+
+
+#define BARRA3_PIN                         GPIO_PIN_2
+#define BARRA3_GPIO_PORT                   GPIOD
+#define BARRA3_GPIO_CLK_ENABLE()           __GPIOD_CLK_ENABLE()
+#define BARRA3_GPIO_CLK_DISABLE()          __GPIOD_CLK_DISABLE()
+
+
+#define BARRA4_PIN                         GPIO_PIN_3
+#define BARRA4_GPIO_PORT                   GPIOD
+#define BARRA4_GPIO_CLK_ENABLE()           __GPIOD_CLK_ENABLE()
+#define BARRA4_GPIO_CLK_DISABLE()          __GPIOD_CLK_DISABLE()
+
 
 #define LEDx_GPIO_CLK_ENABLE(__INDEX__) do{if((__INDEX__) == 0) LED4_GPIO_CLK_ENABLE(); else \
                                            if((__INDEX__) == 1) LED3_GPIO_CLK_ENABLE(); else \
                                            if((__INDEX__) == 2) LED5_GPIO_CLK_ENABLE(); else \
-                                           if((__INDEX__) == 3) LED6_GPIO_CLK_ENABLE(); \
+                                           if((__INDEX__) == 3) LED6_GPIO_CLK_ENABLE(); else \
+                                           if((__INDEX__) == 4) BARRA1_GPIO_CLK_ENABLE(); else \
+                                           if((__INDEX__) == 5) BARRA2_GPIO_CLK_ENABLE(); else \
+                                           if((__INDEX__) == 6) BARRA3_GPIO_CLK_ENABLE(); else \
+                                           if((__INDEX__) == 7) BARRA4_GPIO_CLK_ENABLE(); \
                                            }while(0)
 
 #define LEDx_GPIO_CLK_DISABLE(__INDEX__) do{if((__INDEX__) == 0) LED4_GPIO_CLK_DISABLE(); else \
                                             if((__INDEX__) == 1) LED3_GPIO_CLK_DISABLE(); else \
                                             if((__INDEX__) == 2) LED5_GPIO_CLK_DISABLE(); else \
-                                            if((__INDEX__) == 3) LED6_GPIO_CLK_DISABLE(); \
+                                            if((__INDEX__) == 3) LED6_GPIO_CLK_DISABLE(); else \
+                                            if((__INDEX__) == 4) BARRA1_GPIO_CLK_DISABLE(); else \
+                                            if((__INDEX__) == 5) BARRA2_GPIO_CLK_DISABLE(); else \
+                                            if((__INDEX__) == 6) BARRA3_GPIO_CLK_DISABLE(); else \
+                                            if((__INDEX__) == 7) BARRA4_GPIO_CLK_DISABLE(); \
                                             }while(0)
 /**
   * @}
@@ -272,7 +305,7 @@ typedef enum
   */
 uint32_t BSP_GetVersion(void);
 void     BSP_LED_Init(Led_TypeDef Led);
-void     BSP_BARRA_Init();
+uint8_t BSP_LED_Read(Led_TypeDef Led);
 void     BSP_LED_On(Led_TypeDef Led);
 void     BSP_LED_Off(Led_TypeDef Led);
 void     BSP_LED_Toggle(Led_TypeDef Led);
@@ -298,7 +331,13 @@ uint32_t BSP_PB_GetState(Button_TypeDef Button);
 /**
   * @}
   */
-  
+
+
+void BSP_ADC_Init(void);
+uint16_t BSP_ADC_GetValue(void);
+
+
+
 #ifdef __cplusplus
 }
 #endif

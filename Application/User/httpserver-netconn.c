@@ -109,6 +109,9 @@ static void http_server_serve(struct netconn *conn) {
 				} else if (strncmp(buf, "GET /leds.html", 14) == 0) {
 					/* Load dynamic page */
 					ReturnLeds(conn,buf);
+				} else if (strncmp(buf, "GET /ADC.html", 13) == 0) {
+					/* Load dynamic page */
+					ReturnADC(conn);
 				} else if ((strncmp(buf, "GET /index.html", 15) == 0)
 						|| (strncmp(buf, "GET / ", 6) == 0)) {
 					/* Load Index page */
@@ -174,7 +177,7 @@ static void http_server_netconn_thread(void *arg) {
  */
 void http_server_netconn_init() {
 	sys_thread_new("HTTP", http_server_netconn_thread, NULL,
-			DEFAULT_THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+			1024, WEBSERVER_THREAD_PRIO);
 }
 
 
@@ -190,6 +193,18 @@ void ReturnTasks(struct netconn *conn) {
 	osThreadList((unsigned char *) (PAGE_BODY + strlen(PAGE_BODY)));
 	strcat((char *) PAGE_BODY,	"<br><br>---------------------------------------------");
 	strcat((char *) PAGE_BODY,	"<br>B : Blocked, R : Ready, D : Deleted, S : Suspended<br>");
+
+	/* Send the dynamically generated page */
+
+	netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
+}
+
+
+void ReturnADC(struct netconn *conn) {
+	portCHAR PAGE_BODY[512];
+	memset(PAGE_BODY, 0, 512);
+
+	sprintf(PAGE_BODY,"HTTP/1.0 200 OK\n\n%d",BSP_ADC_GetValue()/41);
 
 	/* Send the dynamically generated page */
 
@@ -242,7 +257,33 @@ void ReturnLeds(struct netconn *conn, char* buf) {
 
 
 	strcat((char *) PAGE_BODY,	"HTTP/1.0 200 OK\nContent-Type: application/json\n\n"
-			"{\"leds\": [0,0,1,1]}\n");
+			"{\"leds\": [");
+
+	if(BSP_LED_Read(BARRA1))
+		strcat((char *) PAGE_BODY,"1,");
+	else
+		strcat((char *) PAGE_BODY,"0,");
+
+
+	if(BSP_LED_Read(BARRA2))
+		strcat((char *) PAGE_BODY,"1,");
+	else
+		strcat((char *) PAGE_BODY,"0,");
+
+
+	if(BSP_LED_Read(BARRA3))
+		strcat((char *) PAGE_BODY,"1,");
+	else
+		strcat((char *) PAGE_BODY,"0,");
+
+
+	if(BSP_LED_Read(BARRA4))
+		strcat((char *) PAGE_BODY,"1");
+	else
+		strcat((char *) PAGE_BODY,"0");
+
+
+	strcat((char *) PAGE_BODY,"]}\n");
 
 	netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
 }

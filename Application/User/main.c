@@ -11,7 +11,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright © 2016 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright ï¿½ 2016 STMicroelectronics International N.V. 
   * All rights reserved.</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -245,8 +245,17 @@ static void BSP_Config(void)
   BSP_LED_Init(LED5);
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
+  BSP_LED_Init(BARRA1);
+  BSP_LED_Init(BARRA1);
+  BSP_LED_Init(BARRA1);
+  BSP_LED_Init(BARRA1);
 
-  BSP_BARRA_Init();
+
+  // Inicializo el ADC
+
+  BSP_ADC_Init();
+
+
 
 
 

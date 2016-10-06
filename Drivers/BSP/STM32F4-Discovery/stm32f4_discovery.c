@@ -103,10 +103,10 @@ const uint16_t GPIO_PIN[LEDn] = {LED4_PIN,
                                  LED3_PIN, 
                                  LED5_PIN,
                                  LED6_PIN,
-								 GPIO_PIN_0,
-								 GPIO_PIN_1,
-								 GPIO_PIN_2,
-								 GPIO_PIN_3};
+								 BARRA1_PIN,
+								 BARRA2_PIN,
+								 BARRA3_PIN,
+								 BARRA4_PIN};
 
 
 GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {KEY_BUTTON_GPIO_PORT}; 
@@ -197,23 +197,6 @@ void BSP_LED_Init(Led_TypeDef Led)
   
   HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_RESET); 
 }
-void BSP_BARRA_Init()
-{
-  GPIO_InitTypeDef  GPIO_InitStruct;
-
-  /* Enable the GPIO_LED Clock */
-  __GPIOD_CLK_ENABLE();
-
-  /* Configure the GPIO_LED pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-  //HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_RESET);
-}
 
 
 
@@ -243,6 +226,11 @@ void BSP_LED_On(Led_TypeDef Led)
 void BSP_LED_Off(Led_TypeDef Led)
 {
   HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_RESET); 
+}
+
+uint8_t BSP_LED_Read(Led_TypeDef Led)
+{
+  return HAL_GPIO_ReadPin(GPIO_PORT[Led], GPIO_PIN[Led]);
 }
 
 /**
@@ -731,3 +719,61 @@ uint8_t AUDIO_IO_Read(uint8_t Addr, uint8_t Reg)
   */ 
     
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+ADC_HandleTypeDef ADC_HandleStruct;
+#define EXP_BOARD_POT_PIN				   GPIO_PIN_2
+#define EXP_BOARD_POT_PORT                   GPIOC
+#define EXP_BOARD_POT_PIN_CLK_ENABLE()           __GPIOC_CLK_ENABLE()
+#define EXP_BOARD_POT_ADC_CLK_ENABLE()		__ADC1_CLK_ENABLE()
+#define EXP_BOARD_POT_CLK_DISABLE()          __GPIOD_CLK_DISABLE()
+#define EXP_BOARD_POT_CHANNEL				   ADC_CHANNEL_12
+
+void BSP_ADC_Init(void){
+	ADC_ChannelConfTypeDef ChannelConfStruct;
+		GPIO_InitTypeDef GPIO_InitStruct;
+
+		EXP_BOARD_POT_PIN_CLK_ENABLE()
+		;
+		EXP_BOARD_POT_ADC_CLK_ENABLE()
+		;
+
+		ADC_HandleStruct.Instance = ADC1;
+
+		ADC_HandleStruct.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+		ADC_HandleStruct.Init.Resolution = ADC_RESOLUTION_12B;
+		ADC_HandleStruct.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+		ADC_HandleStruct.Init.ScanConvMode = DISABLE;
+		ADC_HandleStruct.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+		ADC_HandleStruct.Init.ContinuousConvMode = DISABLE;
+		ADC_HandleStruct.Init.NbrOfConversion = 1;
+		ADC_HandleStruct.Init.DiscontinuousConvMode = DISABLE;
+		ADC_HandleStruct.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+		ADC_HandleStruct.Init.DMAContinuousRequests = DISABLE;
+		ADC_HandleStruct.Init.NbrOfDiscConversion = 0;
+		ADC_HandleStruct.Init.ExternalTrigConvEdge =
+		ADC_EXTERNALTRIGCONVEDGE_NONE;
+		ADC_HandleStruct.Init.EOCSelection = DISABLE;
+
+		GPIO_InitStruct.Pin = EXP_BOARD_POT_PIN;
+		GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+
+		HAL_GPIO_Init(EXP_BOARD_POT_PORT, &GPIO_InitStruct);
+
+		ChannelConfStruct.Channel = EXP_BOARD_POT_CHANNEL;
+		ChannelConfStruct.Offset = 0;
+		ChannelConfStruct.Rank = 1;
+		ChannelConfStruct.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+
+		HAL_ADC_Init(&ADC_HandleStruct);
+		HAL_ADC_ConfigChannel(&ADC_HandleStruct, &ChannelConfStruct);
+		HAL_ADC_Start(&ADC_HandleStruct);
+}
+
+uint16_t BSP_ADC_GetValue(void){
+	HAL_ADC_Start(&ADC_HandleStruct);
+		return HAL_ADC_GetValue(&ADC_HandleStruct);
+}
+
+
