@@ -246,9 +246,9 @@ static void BSP_Config(void)
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
   BSP_LED_Init(BARRA1);
-  BSP_LED_Init(BARRA1);
-  BSP_LED_Init(BARRA1);
-  BSP_LED_Init(BARRA1);
+  BSP_LED_Init(BARRA2);
+  BSP_LED_Init(BARRA3);
+  BSP_LED_Init(BARRA4);
 
 
   // Inicializo el ADC
